@@ -32,3 +32,11 @@ def trigger_run(task_id: int) -> TaskRun:
     db.session.commit()
 
     return run
+
+
+def list_runs() -> list[TaskRun]:
+    return TaskRun.query.order_by(TaskRun.started_at.desc().nullslast()).all()
+
+
+def get_run(run_id: int) -> TaskRun | None:
+    return TaskRun.query.get(run_id)

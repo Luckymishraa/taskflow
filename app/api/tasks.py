@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from app.services.run_service import trigger_run
+from app.services.run_service import trigger_run, list_runs, get_run
 from app.schemas import TaskSchema, TaskRunSchema
 from app.services.task_services import (
     list_tasks as list_tasks_service,
@@ -83,3 +83,21 @@ def run_task_now(task_id):
 
 
 run_schema = TaskRunSchema()
+run_list_schema = TaskRunSchema(many=True)
+
+
+@api_bp.route("/runs", methods=["GET"])
+def list_task_runs():
+    runs = list_runs()
+    result = run_list_schema.dump(runs)
+    return jsonify(result), 200
+
+
+@api_bp.route("/runs/<int:run_id>", methods=["GET"])
+def get_task_run(run_id):
+    run = get_run(run_id)
+    if not run:
+        return jsonify({"message": "Run not found"}), 404
+
+    result = run_schema.dump(run)
+    return jsonify(result), 200
