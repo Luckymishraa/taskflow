@@ -1,6 +1,7 @@
 from flask import Flask
 from .config import DevelopmentConfig
 from .extensions import db, migrate
+from .models import Task, TaskRun
 
 
 def create_app(config_class=DevelopmentConfig):
@@ -9,9 +10,5 @@ def create_app(config_class=DevelopmentConfig):
 
     db.init_app(app)
     migrate.init_app(app, db)
-
-    @app.route("/api/health")
-    def health():
-        return {"status": "ok"}, 200
 
     return app
